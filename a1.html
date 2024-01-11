@@ -9,10 +9,49 @@
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Example Student's Assignment 1!</h1>
+    <h1>Rebecca's Assignment 1: Blink!</h1>
     <div class="header">
-      <img src="red-panda.jpg" />
+      <img src="a1-circuit.gif" />
       <p>Here is all the documentation for assignment 1!</p>
+    </div>
+
+    <div>
+      <img src="a1-schematic.jpg"/>
+      <img src="a1-calc.jpg" width="50%"/>
+      <p>I set up each of the LEDs on it's own pin so that they could independently turn on and off. This is represented with the circle on the top of each circuit. They each go to a resistor of 220 ohms. This gives 14.5 mA which is under the 30 mA limit that red, green and yellow LEDs have.</p>
+      <img src="a1-circuit.jpg">
+      <img src="a1-circuit.gif"/>
+      <p>When setting up on the breadboard, I connected each LED to it's own pin. The ground all went to the rail on the side, to be connected to ground on the board. I chose to use red, green and yellow because they all have the same max current.</p>
+      <h2>Code:</h2>
+      <pre>
+  void setup() {
+    pinMode(13, OUTPUT);
+    pinMode(12, OUTPUT);
+    pinMode(11, OUTPUT);        // initializing each pin used (13, 12 & 11) for output
+  }
+
+  void loop() {
+    digitalWrite(13, HIGH);     // turn on LED at pin 13
+    delay(1500);                // wait
+    digitalWrite(13, LOW);      // turn off LED at pin 13
+    delay(500);                 // wait
+    digitalWrite(12, HIGH);     // turn on LED at pin 12
+    delay(1000);                // wait
+    digitalWrite(12, LOW);      // turn off LED at pin 12
+    delay(500);                 // wait
+    digitalWrite(11, HIGH);     // turn on LED at pin 11
+    delay(1200);                // wait
+    digitalWrite(11, LOW);      // turn off LED at pin 11
+    delay(500);                 // wait
+  }
+      </pre>
+      <h2>Questions:</h2>
+      <ol>
+        <li><img src="a1-q1.jpg" /></li>
+        <li>You could blink 14 independently because there are 14 pins you could use. This would draw 5V.</li>
+        <li>Skipped</li>
+        <li>I couldn't tell it was blinking when it was on a 7 millisecond delay.</li>
+      </ol>
     </div>
   </body>
 </html>
