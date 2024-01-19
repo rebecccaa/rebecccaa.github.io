@@ -9,10 +9,77 @@
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Example Student's Assignment 2!</h1>
+    <h1>Rebecca's Assignment 2: Fade!</h1>
     <div class="header">
-      <img src="red-panda.jpg" />
+      <img src="a2-circuit.gif" />
       <p>Here is all the documentation for assignment 2!</p>
+    </div>
+
+    <div>
+      <div class="grid" >
+        <img src="a2-schematic.jpg" />
+        <img src="a2-calc.jpg" />
+      </div>
+      <p>I chose to do a single green led and the white led. The green one was set up similarly to how I've done it in the past and the white led was set up so that each color had it's own PWM pin. I also included a button. Resistors for each color led was calculated as seen. The first row is for the red and greens and the second row is for blue. I used a resistor for the button to ensure that the current is not too high after the button is released. 10K is much higher than necessary, but does not prevent the button from working.</p>
+      <img src="a2-circuit.jpg" />
+      <img src="a2-circuit.gif" />
+      <p>From left to right, button, white led and then green. The white led fades from fully off to fully on. When the button is pressed, it'll turn off and the green will turn on.</p>
+      <h2>Code:</h2>
+      <pre>
+int red = 11;
+int green = 10;
+int blue = 9;
+int idvled = 13;
+int button = 2;
+
+// the setup function runs once when you press reset or power the board
+void setup() {
+  pinMode(red, OUTPUT);                     // initializing red part of the white led for output
+  pinMode(green, OUTPUT);                   // initializing green part of the white led for output
+  pinMode(blue, OUTPUT);                    // initializing blue part of the white led for output
+  pinMode(idvled, OUTPUT);                  // initializing the individual green led for output
+  pinMode(button, INPUT);                   // initializing the button for input
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  int buttonState = 0;                      // initialize button state
+  for (int i = 0; i <= 255; i++) {          // set up loop so the lights will fade on
+    buttonState = digitalRead(button);         // read button state
+    if (buttonState == HIGH) {                 // if the button is pressed
+      digitalWrite(idvled, HIGH);                 // turn the green led on
+      analogWrite(red, 0);                        // turn red part of the white led off
+      analogWrite(blue, 0);                       // turn blue part of the white led off
+    } else {                                   // if the button is not pressed
+      digitalWrite(idvled, LOW);                  // turn the green led off
+      analogWrite(red, i);                        // turn red on to the appropriate brightness
+      analogWrite(blue, i);                       // turn blue on to the appropriate brightness
+    }
+    delay(45);                                 // wait 45 milliseconds
+  }
+  for (int i = 255; i >= 0; i--) {          // set up loop so the lights will fade off
+    buttonState = digitalRead(button);         // read button state
+    if (buttonState == HIGH) {                 // if the button is pressed
+      digitalWrite(idvled, HIGH);                 // turn the green led on
+      analogWrite(red, 0);                        // turn red part of the white led off
+      analogWrite(blue, 0);                       // turn blue part of the white led off
+    } else {                                   // if the button is not pressed
+      digitalWrite(idvled, LOW);                  // turn the green led off
+      analogWrite(red, i);                        // turn red on to the appropriate brightness
+      analogWrite(blue, i);                       // turn blue on to the appropriate brightness
+    }
+    delay(45);                                 // wait 45 miliseconds
+  }
+}
+      </pre>
+      <h2>Questions:</h2>
+      <ol>
+        <li><img src="a2-q1.jpg" /></li>
+        <li>
+          I assumed that the button would be pressed half the time. It would run for 52.887 hrs.
+          <img src="a2-q2.jpg" />
+        </li>
+      </ol>
     </div>
   </body>
 </html>
