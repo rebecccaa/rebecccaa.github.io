@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Rebecca's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Rebecca's Assignment 3: Input Output!</h1>
+    <div class="header">
+      <img src="a3-circuit.gif" />
+      <p>Here is all the documentation for assignment 3!</p>
+    </div>
+
+    <div>
+      <div class="grid" >
+        <img src="a3-schematic.jpg" />
+        <img src="a3-calc.jpg" />
+      </div>
+      <p>I chose to use a photosensor, because it seemed the most responsive when I was trying out different options. I used a 10K ohm resistor for the photosensor. I also set up two simple LEDs with 220 ohm resistors. I got these numbers from the last assignments. To the right, is a sample of the readings from the photosensor, which I used to determine what to map my LED value to. I ended up choosing 150 to 800 to ensure I could get a pretty full range of numbers.</p>
+      <img src="a3-circuit.jpg" />
+      <img src="a3-circuit.gif" />
+      <p>The photosensor is seperate from the LEDs to make it easier to cover. The red LED fades and when it is off, the green turns on.</p>
+      <h2>Code:</h2>
+      <pre>
+int input = A0;                         // pin for photosensor
+int red = 10;                           // pin for red led
+int green = 9;                          // pin for green led
+
+int sensor = 0;                         // initialize var for reading in from sensor
+int outputVal = 0;                      // initialize var for the corresponding led value
+
+void setup() {
+  Serial.begin(9600);                   // initalize the serial monitor for text output
+  pinMode(red, OUTPUT);                 // initalize red led
+  pinMode(green, OUTPUT);               // initalize green led
+}
+
+void loop() {
+  sensor = analogRead(input);           // read in resistance from the photosensor
+  outputVal = map(constrain(sensor, 150, 800), 150, 800, 0, 255);       // constrain sensor val and map to 0-255
+  analogWrite(red, outputVal);          // set the red led to to appropriate level ^
+  if (outputVal <= 0) {                 // if the red led is off
+    digitalWrite(green, HIGH);          // turn the green led on
+  } else {
+    digitalWrite(green, LOW);           // otherwise, the green led is off
+  }
+
+  Serial.print("input: ");
+  Serial.print(sensor);                 // print the raw input value with a label
+  Serial.print("\t output: ");
+  Serial.println(outputVal);            // print the value used for the led with a label
+
+  delay(2);                             // wait 2 milliseconds
+}
+      </pre>
+      <h2>Questions:</h2>
+      <ol>
+        <li><img src="a3-q1.jpg" />The variable resistor could be either one, but the readings would be inverses, so you'd have to adjust the code to accommodate the changes. The calculations show that at different levels of resistance, the Vout would be inverse and add to Vin.</li>
+        <li><img src="a3-q2.jpg" />This is based on the readings above.</li>
+        <li>I would start with the full range as: map(sensor, 0, 65535, 0, 1023). Assuming the reading would be about the same as previous readings, but converted to the new range, the code would be: map(sensor, 9609, 51249, 0, 1023).
+        </li>
+      </ol>
+    </div>
+  </body>
+</html>
