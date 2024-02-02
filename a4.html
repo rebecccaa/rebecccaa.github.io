@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Rebecca's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Rebecca's Assignment 4: Libraries!</h1>
+    <div class="header">
+      <img src="a4-circuit.gif" />
+      <p>Here is all the documentation for assignment 4!</p>
+    </div>
+
+    <div>
+      <img src="a4-schematic.jpg" />
+      <p>Each component (servo and IR receiver) I wanted to use has to be connected to power, ground and a PWM pin.</p>
+      <img src="a4-circuit.jpg" />
+      <img src="a4-circuit.gif" />
+      <p>Pressing the power button rotates the servo arm to 180 and the power up to 0.</p>
+      <h2>Code:</h2>
+      <pre>
+#define DECODE_NEC
+#include &lt;IRremote.h&gt;
+#include &lt;Servo.h&gt;
+
+int receiver = 11;
+int servo = 3;
+
+Servo myServo;                                        // create servo object
+
+void setup() {
+  Serial.begin(9600);                                 // set serial monitor to correct baud
+  IrReceiver.begin(receiver, ENABLE_LED_FEEDBACK);    // start receiver, enable feedback LED
+  myServo.attach(servo);                              // set servo to pin
+}
+
+void loop() {
+  if (IrReceiver.decode()) {                          // check if receiver data is available and decode
+    IrReceiver.resume();                              // receive next val
+    switch (IrReceiver.decodedIRData.command) {       // check decoded result against the following cases
+      case 0x45:                                      // if the power button was pressed
+      Serial.println("power");                        // print to serial monitor
+      myServo.write(180);                             // move the servo arm to 180
+      break;
+      case 0x46:                                      // if the vol + button was pressed
+      Serial.println("vol up");                       // print to serial monitor
+      myServo.write(0);                               // move the servo arm to 0
+      break;
+    }
+  }
+}
+      </pre>
+      <h2>Questions:</h2>
+      <ol>
+        <li><img src="a4-q1.jpg" />Assume the servo takes 100 milliseconds to move 1 degree.</li>
+        <li>Instead of printing and moving the servo after one reading, it should read a second time to see if it matches. If there are 2 in a row that match, then it would run the rest of the case's code. Otherwise, it'll keep reading and decoding.</li>
+        <li>Similarly to the last question, the loop should read and decode from the receiver twice to see if there are matching readings before running through the switch.</li>
+      </ol>
+    </div>
+  </body>
+</html>
