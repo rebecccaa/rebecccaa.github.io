@@ -57,8 +57,8 @@ void loop() {
       <h2>Questions:</h2>
       <ol>
         <li><img src="a4-q1.jpg" />Assume the servo takes 100 milliseconds to move 1 degree.</li>
-        <li>Instead of printing and moving the servo after one reading, it should read a second time to see if it matches. If there are 2 in a row that match, then it would run the rest of the case's code. Otherwise, it'll keep reading and decoding.</li>
-        <li>Similarly to the last question, the loop should read and decode from the receiver twice to see if there are matching readings before running through the switch.</li>
+        <li>The if statement should check the latest reading against the previous to see if they match. If they do, it would proceed to the appropriate case. If there isn't a match, it'll receive the next value and compare to the last one.</li>
+        <li>Collect 10 input values and average them. Use that value for comparison in the switch and run the appropriate section of the loop.</li>
       </ol>
     </div>
   </body>
