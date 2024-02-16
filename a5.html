@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Rebecca's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Rebecca's Assignment 5: High(er) voltage and transistors!</h1>
+    <div class="header">
+      <img src="a5-circuit.gif" />
+      <p>Here is all the documentation for assignment 5!</p>
+    </div>
+
+    <div>
+      <div class="grid" >
+        <img src="a5-schematic.jpg" />
+        <img src="a5-calc.jpg" />
+      </div>
+      <p>I chose to control the LED strip with the IR receiver. This is connected to power and ground, as well as a pin for input. The LED strip is connected to the external power supply and a transistor. The max current for the trasistor is 80A. The LED would have a 9.9V drop and total resistance of 180 ohms. The current would be 1.166A, so well under the max current.</p>
+      <img src="a5-circuit.jpg" />
+      <img src="a5-circuit.gif" />
+      <p>Pressing the power button turns the LED strip on and the volume up turns it off.</p>
+      <h2>Code:</h2>
+      <pre>
+#define DECODE_NEC
+#include &lt;IRremote.h&gt;
+
+int receiver = 11;
+int led = 9;
+
+void setup() {
+  Serial.begin(9600);                                 // set serial monitor to correct baud
+  IrReceiver.begin(receiver, ENABLE_LED_FEEDBACK);    // start receiver, enable feedback LED
+  pinMode(led, OUTPUT);                               // initialize led strip pin for output
+}
+
+void loop() {
+  if (IrReceiver.decode()) {                          // check if receiver data is available and decode
+    IrReceiver.resume();                              // receive next val
+    switch (IrReceiver.decodedIRData.command) {       // check decoded result against the following cases
+      case 0x45:                                      // if the power button was pressed
+      analogWrite(led, 255);                          // turn the led strip on
+      break;
+      case 0x46:                                      // if the vol+ button was pressed
+      analogWrite(led, 0);                            // turn the led strip off
+      break;
+    }
+  }
+}
+      </pre>
+      <h2>Questions:</h2>
+      <ol>
+        <li>The max between pins 2 and 3 would be 80A.</li>
+        <li>
+          <img src="a5-q2.jpg" />
+          Motor: https://www.osepp.com/accessories/motors/138-ls-00027-r280-3-6v-12000-rpm-brushed-dc-motor<br>
+          Diode: https://www.mouser.com/datasheet/2/149/1N4007-888322.pdf<br>
+          Capacitors: https://www.vishay.com/docs/28537/vy1series.pdf
+        </li>
+        <li>
+          <img src="a5-q3.jpg" />
+          pins 1 and 3 low<br>
+          pins 0 and 2 high &nbsp;&nbsp;&nbsp;&nbsp; // for both forward<br>
+          delay 1000 milliseconds<br>
+          pins 0 and 2 low<br>
+          pins 1 and 3 high &nbsp;&nbsp;&nbsp;&nbsp; // for both backwards<br>
+          delay 1000 milliseconds<br>
+          pin 1 low<br>
+          pin 0 high &nbsp;&nbsp;&nbsp;&nbsp; // one forward, one backwards<br>
+          delay 1000 milliseconds<br>
+          pins 0 and 3 low<br>
+          pins 1 and 2 high &nbsp;&nbsp;&nbsp;&nbsp; // reversed<br>
+          delay 1000 milliseconds<br>
+        </li>
+      </ol>
+    </div>
+  </body>
+</html>
