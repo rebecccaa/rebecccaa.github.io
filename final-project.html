@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Rebecca's HCDE 439 Physical Computing Page!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Rebecca's Final Project: Safe Candle Tray!</h1>
+    <div class="header">
+      <img src="final-prototype-1.jpg" />
+      <p>Here is all the documentation for my final project!</p>
+    </div>
+
+    <div>
+      <div class="grid" >
+        <img src="final-sketch.jpg" />
+        <img src="final-schematic.jpg" />
+      </div>
+      <p>I wanted to build a device for your candle that reminds you to put it out candle and tells you when it is fully cooled down so you can put it away. I used a red and a green led, a buzzer and a thermistor. The thermistor is to know whether the candle is lit and when it is cool. I calibrated by lighting the candle and fully cooling it in order to find the thermistor values necessary for my code. I chose to do both a visual and an audio cue to ensure that users would know when to take action.</p>
+      <div class="grid" >
+        <img src="final-circuit.jpg" />
+        <img src="final-interior.jpg" />
+      </div>
+      <p>I used this small breadboard and just stacked it on top of my arduino to make it more compact. The LEDs and thermistor needed to be visible on the outside of the box, so I poked holes in the box and inserted those components. The back of the box got a panel with a small hole in it for the cable to come through. If I was to do this again, I probably would have done a battery so it could be self contained. There was more space than I thought there was going to be in the enclosed section.</p>
+      <img src="final-prototype-1.jpg" />
+      <div class="grid" >
+        <img src="final-prototype-2.jpg" />
+        <img src="final-prototype-3.jpg" />
+      </div>
+      <p>The thermistor is positioned on the center part so that the candle could push up against if fully. When it reads 650 or higher, or when the top of the candle is fully melted, it will begin tracking time. It is set to 2 hours, but it would be fun in future iterations to make this adjustable. It would require some other input method though. After 2 hours, the red LED will light up and the buzzer will start going off. It'll keep going off until the candle begins to cool off, which is generally not immediately after it has been extinguished due to the residual heat. The temperature will continue to drop and when it hits 550, or where the candle is cool to touch and ready to put away. At that point, the green LED will light up and it will buzz once.</p>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/cqWJ8vDTmws?si=q5JvUAHM8Q2ad5Lq&amp;controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      <h2>Code:</h2>
+      <pre>
+const int tempPin = A0;
+const int redLed = 11;
+const int greenLed = 10;
+const int buzzer = 2;
+const int burnTime = 7200000;               // = 2 hrs
+int temp;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(redLed, OUTPUT);
+  pinMode(greenLed, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+}
+
+void loop() {
+  temp = analogRead(tempPin);               // read in temperature
+  if (temp >= 650) {                        // when the candle is fully melted across the top
+    delay(burnTime);                        // wait the
+    digitalWrite(redLed, HIGH);             // turn on the red led
+    temp = analogRead(tempPin);             // read in temperature
+    while (analogRead(tempPin) >= 680) {    // while the candle is still lit
+      digitalWrite(buzzer, HIGH);           // turn on the buzzer
+      delay(500);                           // wait half a second
+      digitalWrite(buzzer, LOW);            // turn off the buzzer
+      delay(2000);                          // wait 2 seconds
+      temp = analogRead(tempPin);           // read in temperature
+    }
+    digitalWrite(redLed, LOW);              // turn off the led
+    while (analogRead(tempPin) >= 550) {    // while the candle is still warm
+      delay(1000);                          // wait 1 second (to let the candle continue to cool)
+      temp = analogRead(tempPin);           // read in temperature
+    }
+    digitalWrite(greenLed, HIGH);           // turn on the green led
+    digitalWrite(buzzer, HIGH);             // turn on the buzzer
+    delay(500);                             // wait half a second
+    digitalWrite(buzzer, LOW);              // turn off the buzzer
+    delay(2000);                            // wait 2 seconds
+    digitalWrite(greenLed, LOW);            // turn off led
+  }
+}
+      </pre>
+    </div>
+  </body>
+</html>
